@@ -1,0 +1,6 @@
+limine/
+iso/
+
+*.iso
+*.o
+*.elf
