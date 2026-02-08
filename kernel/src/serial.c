@@ -36,3 +36,37 @@ void serial_puts(const char *s) {
         serial_putc(*s++);
     }
 }
+
+void serial_put_hex(uint64_t value) {
+    const char *digits = "0123456789ABCDEF";
+    serial_puts("0x");
+    
+    int started = 0;
+    for (int i = 60; i >= 0; i -= 4) {
+        int digit = (value >> i) & 0xF;
+        if (digit != 0 || started || i == 0) {
+            serial_putc(digits[digit]);
+            started = 1;
+        }
+    }
+}
+
+void serial_put_dec(uint64_t value) {
+    if (value == 0) {
+        serial_putc('0');
+        return;
+    }
+    
+    char buffer[20];
+    int i = 0;
+    
+    while (value > 0) {
+        buffer[i++] = '0' + (value % 10);
+        value /= 10;
+    }
+    
+    // Print in reverse
+    while (i > 0) {
+        serial_putc(buffer[--i]);
+    }
+}

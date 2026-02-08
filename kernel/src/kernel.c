@@ -2,6 +2,11 @@
 
 #include "serial.h"
 #include "limine.h"
+#include "pmm.h"
+
+static void hcf() {
+    for (;;) asm("hlt");
+}
 
 // Limine base revision
 __attribute__((used, section(".requests")))
@@ -9,8 +14,15 @@ static volatile uint64_t base_revision[] = LIMINE_BASE_REVISION(3);
 
 // Memory map request
 __attribute__((used, section(".requests")))
-static volatile struct limine_memmap_request memmap_request = {
+volatile struct limine_memmap_request memmap_request = {
     .id = LIMINE_MEMMAP_REQUEST_ID,
+    .revision = 0
+};
+
+// Add this request alongside your memmap request
+__attribute__((used, section(".requests")))
+volatile struct limine_hhdm_request hhdm_request = {
+    .id = LIMINE_HHDM_REQUEST_ID,
     .revision = 0
 };
 
@@ -20,10 +32,37 @@ void _start(void) {
     
     if (memmap_request.response == NULL) {
         serial_puts("PANIC: No memory map!\n");
-        for (;;) asm("hlt");
+        hcf();
     }
+
+    if (hhdm_request.response == NULL) {
+    serial_puts("PANIC: No HHDM!\n");
+    hcf();
+}
     
-    serial_puts("Memory map received!\n");
+    pmm_init(memmap_request.response, hhdm_request.response->offset);
     
-    for (;;) asm("hlt");
+    // Test the allocator
+    serial_puts("\nTesting PMM allocator...\n");
+    void *page1 = pmm_alloc();
+    void *page2 = pmm_alloc();
+    void *page3 = pmm_alloc();
+    
+    serial_puts("Allocated page 1: ");
+    serial_put_hex((uint64_t)page1);
+    serial_puts("\nAllocated page 2: ");
+    serial_put_hex((uint64_t)page2);
+    serial_puts("\nAllocated page 3: ");
+    serial_put_hex((uint64_t)page3);
+    serial_puts("\n");
+    
+    pmm_free(page2);
+    serial_puts("Freed page 2\n");
+    
+    void *page4 = pmm_alloc();
+    serial_puts("Allocated page 4: ");
+    serial_put_hex((uint64_t)page4);
+    serial_puts(" (should be same as page 2)\n");
+    
+    hcf();
 }
