@@ -1,0 +1,39 @@
+#include <stddef.h>
+
+#include "include/serial.h"
+#include "include/limine.h"
+#include "include/pmm.h"
+#include "include/vmm.h"
+#include "include/limine_requests.h"
+
+static void hcf() {
+    for (;;) asm("hlt");
+}
+
+void _start(void) {
+    serial_init();
+    serial_puts("\nWelcome to Lithium!\n");
+    
+    if (!memmap_request.response || !hhdm_request.response || !exec_addr_request.response) {
+        serial_puts("PANIC: Missing responses!\n");
+        hcf();
+    }
+
+    serial_puts("\n === Lithium Kernel Memory Layout === \n");
+    serial_puts("HHDM offset:          ");
+    serial_put_hex(hhdm_request.response->offset);
+    serial_puts("\n");
+    
+    serial_puts("Kernel physical base: ");
+    serial_put_hex(exec_addr_request.response->physical_base);
+    serial_puts("\n");
+    
+    serial_puts("Kernel virtual base:  ");
+    serial_put_hex(exec_addr_request.response->virtual_base);
+    serial_puts("\n\n");
+    
+    pmm_init(memmap_request.response, hhdm_request.response->offset);
+    vmm_init();
+
+    hcf();
+}
