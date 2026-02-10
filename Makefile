@@ -5,7 +5,7 @@
 #
 # (c) 2026 LithiumOS Project
 #
-# SPDX-License-Idefentifier: GPL-3.0-Only
+# SPDX-License-Identifier: GPL-3.0-Only
 #
 # ================================================
 
