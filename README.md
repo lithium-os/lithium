@@ -18,7 +18,7 @@ This OS is x86_64, the freestanding 64-bit environment is provided by our bootlo
 
 This OS is also attempting to be mostly binary compatible with Linux. This is to avoid the impossible project of rebuilding pretty much the entire software ecosystem from scratch and makes the process of porting exponentially easier.
 
-## Why an OS project in 202x?
+## Why an OS project in 202X?
 
 For the most part, this is an educational side project. I don't have plans for this OS to really compete with already established systems like BSD, Linux, or Windows. Lithium is a tool to teach the fundamentals of operating systems and POSIX without having to build from ground-zero.
 
@@ -28,12 +28,26 @@ But also, I was inspired by other projects that are more progressed than this on
 
 Both of these are *very* different, one is a traditional monolithic kernel almost fully in C, the other is a modular kernel written vastly in C++.
 
-This project, Lithium, is following the more traditional path of a monolithic kernel mostly in C. However I do roughly know where C++ could be a net benefit, so some regions may be developed in C++. Other languages like Zig or Rust are being excluded from this project, not because of dislike for these languages, simply because... I don't know them well enough to make a project like this in them.
+This project, Lithium, is following the more traditional path of a monolithic kernel mostly in C. However I do roughly know where C++ could be a net benefit, so some regions may be developed in C++. Other languages like Zig or Rust are excluded from this project, not because of dislike for these languages, simply because... I don't know them well enough to make a project like this in them. Including languages I do not understand into the project sounds like an awful idea, and I simply will not allow it.
 
 ## How to build?
 
+Ensure you have the required dependencies before compiling:
+```
+ - x86_64-linux-gnu-gcc
+ - x86_64-linux-gnu-ld
+ - x86_64-linux-gnu-as
+ - limine-v10.x-binary git repo
+ - xorriso
+ - make
+```
+
+Once you've cloned the repo, and built the limine binary provided [up here](#architecture-choices), the process is as simple as `make iso`. This builds and packages the OS automatically.
+
 ## How to Contribute?
 
-## Using AI
+Contribution guidelines and helpful tips can be found in the [Contributing Guide](./.github/CONTRIBUTING.md)
 
 ## License
+
+Lithium is licensed under the [GNU General Public License 3.0](./LICENSE).
