@@ -84,7 +84,7 @@ iso: $(KERNEL)
 		-efi-boot-part --efi-boot-image --protective-msdos-label \
 		$(ISOD) -o lithium.iso 2>&1 | grep -v "^xorriso" || true
 	@./limine/limine bios-install lithium.iso 2>/dev/null
-	@printf "$(GREEN)ISO built: lithium.iso$(RESET)\n"
+	@printf "$(GREEN)ISO built:$(RESET) lithium.iso\n"
 
 run: iso
 	@printf "$(BLUE)[QEMU]$(RESET) Launching Lithium via qemu..."
