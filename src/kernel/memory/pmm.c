@@ -1,9 +1,9 @@
 // kernel/src/pmm.c
 #include <stddef.h>
 #include <stdint.h>
-#include "include/limine.h"
-#include "include/serial.h"
-#include "include/pmm.h"
+#include "../include/limine.h"
+#include "../include/serial.h"
+#include "../include/pmm.h"
 
 #define PAGE_SIZE 4096
 
@@ -95,6 +95,7 @@ void *pmm_alloc(void) {
     free_list_head = page->next;
     free_pages--;
     
+    serial_puts("Alloc OK.\n");
     return (void *)page;
 }
 

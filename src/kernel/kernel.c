@@ -1,5 +1,13 @@
 #include <stddef.h>
 
+/**
+ * Since this is the kernel entrypoint for Lithium, it should always stay
+ * at the top level of the `src/kernel` source tree. Please do not move
+ * this file!
+ * 
+ * -> wellbutteredtoast - 10 Feb 2026
+ */
+
 #include "include/serial.h"
 #include "include/limine.h"
 #include "include/pmm.h"
