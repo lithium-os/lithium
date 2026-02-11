@@ -190,32 +190,55 @@ void vmm_dump_pml4(void) {
 }
 
 // Map a virtual address
-int vmm_map(uint64_t v_addr, uint64_t phys, uint64_t flags) {
+int vmm_map(uint64_t vaddr, uint64_t phys, uint64_t flags) {
+    serial_puts("vmm_map: ");
+    serial_put_hex(vaddr);
+    serial_puts(" -> ");
+    serial_put_hex(phys);
+    serial_puts("\n");
+    
     uint64_t cr3 = read_cr3();
     uint64_t pml4_phys = cr3 & 0x000FFFFFFFFFF000ULL;
-
-    uint64_t pml4_idx = (v_addr >> 39) & 0x1FF;
-    uint64_t pdpt_idx = (v_addr >> 30) & 0x1FF;
-    uint64_t pd_idx   = (v_addr >> 21) & 0x1FF;
-    uint64_t pt_idx   = (v_addr >> 12) & 0x1FF;
-
-    // Walk / make pt hierarchy
+    
+    // Extract indices
+    uint64_t pml4_idx = (vaddr >> 39) & 0x1FF;
+    uint64_t pdpt_idx = (vaddr >> 30) & 0x1FF;
+    uint64_t pd_idx   = (vaddr >> 21) & 0x1FF;
+    uint64_t pt_idx   = (vaddr >> 12) & 0x1FF;
+    
+    serial_puts("  Indices: PML4[");
+    serial_put_dec(pml4_idx);
+    serial_puts("] PDPT[");
+    serial_put_dec(pdpt_idx);
+    serial_puts("] PD[");
+    serial_put_dec(pd_idx);
+    serial_puts("] PT[");
+    serial_put_dec(pt_idx);
+    serial_puts("]\n");
+    
+    // Walk/create page table hierarchy
     uint64_t *pml4 = phys_to_virt(pml4_phys);
-
+    
+    serial_puts("  Getting PDPT...\n");
     uint64_t *pdpt = get_or_create_table(pml4, pml4_idx, 1);
-    if (!pdpt)
-        return -1;
+    if (!pdpt) return -1;
     
+    serial_puts("  Getting PD...\n");
     uint64_t *pd = get_or_create_table(pdpt, pdpt_idx, 1);
-    if (!pd)
-        return -1;
+    if (!pd) return -1;
     
+    serial_puts("  Getting PT...\n");
     uint64_t *pt = get_or_create_table(pd, pd_idx, 1);
-    if (!pt) 
-        return -1;
-
+    if (!pt) return -1;
+    
+    serial_puts("  Mapping page...\n");
+    // Map the page
     pt[pt_idx] = (phys & 0x000FFFFFFFFFF000ULL) | flags | PTE_PRESENT;
-    asm volatile ("invlpg (%0)" :: "r"(v_addr) : "memory");
+    
+    // Flush TLB for this address
+    asm volatile ("invlpg (%0)" :: "r"(vaddr) : "memory");
+    
+    serial_puts("vmm_map: success!\n");
     return 0;
 }
 

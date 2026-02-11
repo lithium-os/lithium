@@ -13,6 +13,7 @@
 #include "include/pmm.h"
 #include "include/vmm.h"
 #include "include/limine_requests.h"
+#include "include/kalloc.h"
 
 static void hcf() {
     for (;;) asm("hlt");
@@ -42,6 +43,7 @@ void _start(void) {
     
     pmm_init(memmap_request.response, hhdm_request.response->offset);
     vmm_init();
+    kalloc_init();
 
     hcf();
 }

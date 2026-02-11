@@ -16,4 +16,6 @@ void *kalloc(size_t size);
 
 void kfree(void *ptr);
 
+void test_kalloc();
+
 #endif /* KALLOC_H */
