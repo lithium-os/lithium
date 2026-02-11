@@ -45,5 +45,11 @@ void _start(void) {
     vmm_init();
     kalloc_init();
 
+    void *ktptr1 = kmalloc((size_t)128);
+    void *ktptr2 = kmalloc((size_t)2048);
+    
+    kfree(ktptr2);
+    kfree(ktptr1);
+
     hcf();
 }

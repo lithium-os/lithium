@@ -12,7 +12,9 @@ void kmem_cache_free(struct kmem_cache *cache, void *ptr);
 
 void kalloc_init(void);
 
-void *kalloc(size_t size);
+void *kmalloc(size_t size);
+
+void *krealloc(void *ptr, size_t new_size);
 
 void kfree(void *ptr);
 

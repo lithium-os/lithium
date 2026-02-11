@@ -45,7 +45,7 @@ CFLAGS = \
 	-Werror=implicit-int -Werror=incompatible-pointer-types \
 	-fno-delete-null-pointer-checks -fno-strict-overflow \
 	-fno-common -fno-builtin -Wshadow -Wcast-align -Wundef \
-	-mcmodel=kernel -I$(SRCD)/include -O2
+	-mcmodel=kernel -I$(SRCD)/include -O3
 
 LDFLAGS = \
 	-nostdlib -static --no-dynamic-linker -z text \
@@ -93,4 +93,6 @@ run: iso
 clean:
 	@printf "$(RED)[CLEAN]$(RESET) Removing build artifacts...\n"
 	@rm -rf $(OBJD) $(KERNEL) $(ISOD) lithium.iso
+	@printf "$(RED)[CLEAN]$(RESET) Removing object files...\n"
+	@rm -rf src/kernel/*.o
 	@printf "$(GREEN)Clean complete!$(RESET)\n"
