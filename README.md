@@ -4,6 +4,8 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/lithium-os/lithium)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/lithium-os/lithium/latest)
 
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lithium-os/lithium)
+
 Lithium is a general purpose x86_64 operating system. It's primarily developed in C with some features done in Assembly or even C++. Lithium is a continuation of and derivation of [Horizon](https://github.com/horizonos-project/horizon), a recently archived x86 OS project of similar structure and goal.
 
 Lithium has one long-term goal as an operating system; to teach. To teach myself, other maintainers, and those interested in OS-level development. 
