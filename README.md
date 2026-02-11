@@ -33,3 +33,7 @@ This project, Lithium, is following the more traditional path of a monolithic ke
 ## How to build?
 
 ## How to Contribute?
+
+## Using AI
+
+## License
