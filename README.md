@@ -2,7 +2,6 @@
 
 ![GitHub License](https://img.shields.io/github/license/lithium-os/lithium)
 ![GitHub last commit](https://img.shields.io/github/last-commit/lithium-os/lithium)
-![GitHub commits since latest release](https://img.shields.io/github/commits-since/lithium-os/lithium/latest)
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lithium-os/lithium)
 
