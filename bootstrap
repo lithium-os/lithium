@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+clear
+
+git clone https://codeberg.org/Limine/Limine.git \
+    --branch=v10.x-binary \
+    --depth 1 limine
+
+cd limine
+make

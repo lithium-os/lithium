@@ -1,5 +1,7 @@
 limine/
 iso/
+asm/
+preproc/
 
 *.iso
 *.o

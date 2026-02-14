@@ -5,15 +5,13 @@
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lithium-os/lithium)
 
-Lithium is a general purpose x86_64 operating system. It's primarily developed in C with some features done in Assembly or even C++. Lithium is a continuation of and derivation of [Horizon](https://github.com/horizonos-project/horizon), a recently archived x86 OS project of similar structure and goal.
+Lithium is a general purpose x86_64 operating system. It's primarily developed in C with some features done in Assembly or even C++. Lithium is a continuation of and derivation of [Horizon](https://github.com/horizonos-project/horizon), a recently archived x86 OS project of similar structure and goal. <!-- Recall that horizon was put into the public domain so we're cool to just borrow a chunk of the already existing code like the blkdev/vfs/ext2 impls-->
 
 Lithium has one long-term goal as an operating system; to teach. To teach myself, other maintainers, and those interested in OS-level development. 
 
 ## Architecture Choices
 
-This OS is x86_64, the freestanding 64-bit environment is provided by our bootloader of choice; *[Limine](https://codeberg.org/Limine/Limine)*. Limine is an excellent bootloader, but to use it here you'll need to clone the `v10.x-binary` branch. This repo provides a `v10.x` Limine header in its source code so you as the end user do not need to build Limine from scratch.
-
-> `git clone https://codeberg.org/Limine/Limine.git --branch=v10.x-binary --depth=1 && cd limine && make`
+This OS is x86_64, the freestanding 64-bit environment is provided by our bootloader of choice; *[Limine](https://codeberg.org/Limine/Limine)*. Limine is an excellent bootloader, you'll want to run the `./bootstrap` setup script to get the dependencies set up.
 
 This OS is also attempting to be mostly binary compatible with Linux. This is to avoid the impossible project of rebuilding pretty much the entire software ecosystem from scratch and makes the process of porting exponentially easier.
 

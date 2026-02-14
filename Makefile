@@ -28,11 +28,15 @@ endif
 SRCD 	:= src/kernel
 ISOD 	:= iso
 OBJD 	:= obj
+PREPD 	:= preproc
+ASMD  	:= asm
 LINK 	:= src/linker.ld
 KERNEL 	:= kernel.elf
 
 SRCS := $(shell find $(SRCD) -type f -name '*.c' 2>/dev/null)
 OBJS := $(patsubst $(SRCD)/%, $(OBJD)/%, $(SRCS:.c=.o))
+PREPS := $(patsubst $(SRCD)/%, $(PREPD)/%, $(SRCS:.c=.i))
+ASMS := $(patsubst $(SRCD)/%, $(ASMD)/%, $(SRCS:.c=.s))
 
 # A lot of flags, perfect for pedantic compiling!
 CFLAGS = \
@@ -51,18 +55,43 @@ LDFLAGS = \
 	-nostdlib -static --no-dynamic-linker -z text \
 	-z max-page-size=0x1000 -T $(LINK)
 
-.PHONY: all clean iso run
+.PHONY: all clean iso run preprocess assemble
 
 all: $(KERNEL)
 
 $(OBJD):
 	@mkdir -p $(OBJD)
 
+$(PREPD):
+	@mkdir -p $(PREPD)
+
+$(ASMD):
+	@mkdir -p $(ASMD)
+
+# Preprocess only - stop after preprocessing
+$(PREPD)/%.i: $(SRCD)/%.c | $(PREPD)
+	@printf "$(YELLOW)[CPP]$(RESET) $<\n"
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -E $< -o $@
+
+# Assemble only - stop after assembly generation
+$(ASMD)/%.s: $(SRCD)/%.c | $(ASMD)
+	@printf "$(BLUE)[ASM]$(RESET) $<\n"
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -S $< -o $@
+
 # Compile C sources
 $(OBJD)/%.o: $(SRCD)/%.c | $(OBJD)
 	@printf "$(BLUE)[CC ]$(RESET) $<\n"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+# targets to build all preprocessed/assembly files
+preprocess: $(PREPS)
+	@printf "$(GREEN)All files preprocessed!$(RESET)\n"
+
+assemble: $(ASMS)
+	@printf "$(GREEN)All files assembled!$(RESET)\n"
 
 $(KERNEL): $(OBJS)
 	@printf "$(GREEN)[LD ]$(RESET) $@\n"
@@ -92,7 +121,7 @@ run: iso
 
 clean:
 	@printf "$(RED)[CLEAN]$(RESET) Removing build artifacts...\n"
-	@rm -rf $(OBJD) $(KERNEL) $(ISOD) lithium.iso
+	@rm -rf $(OBJD) $(KERNEL) $(ISOD) lithium.iso $(PREPD) $(ASMD)
 	@printf "$(RED)[CLEAN]$(RESET) Removing object files...\n"
 	@rm -rf src/kernel/*.o
 	@printf "$(GREEN)Clean complete!$(RESET)\n"
